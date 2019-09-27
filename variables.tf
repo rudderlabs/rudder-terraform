@@ -4,7 +4,7 @@ variable "region" {
 }
 
 variable "prefix" {
-  default = "rudder"
+  default = "rudders"
 }
 
 variable "ec2" {
@@ -17,5 +17,14 @@ variable "ec2" {
   }
 }
 variable "s3_destination" {
-  default = "rudder-client-s3-destination"
+  default = "sum-rudder-client-s3-destination"
+}
+
+variable "custom_vpc" {
+  type = "map"
+
+  default = {
+    vpc_id    = ""
+    subnet_id = ""
+  }
 }

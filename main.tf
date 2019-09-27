@@ -5,11 +5,11 @@ provider "aws" {
 }
 
 data "aws_vpc" "main" {
-  id = "vpc-b4dc7dd1"
+  id = "${var.custom_vpc.vpc_id}"
 }
 
 data "aws_subnet" "main" {
-  id = "subnet-254e8852"
+  id = "${var.custom_vpc.subnet_id}"
 }
 
 resource "aws_key_pair" "deployer" {
