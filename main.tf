@@ -4,6 +4,14 @@ provider "aws" {
   region  = "us-east-1"
 }
 
+data "aws_vpc" "main" {
+  id = "vpc-b4dc7dd1"
+}
+
+data "aws_subnet" "main" {
+  id = "subnet-254e8852"
+}
+
 resource "aws_key_pair" "deployer" {
   key_name   = "${var.prefix}_rudder_deployer"
   public_key = "${file("${var.ec2.private_key_path}.pub")}"
@@ -12,6 +20,7 @@ resource "aws_key_pair" "deployer" {
 resource "aws_security_group" "allow_ssh" {
   name        = "${var.prefix}_allow_ssh"
   description = "Allow SSH inbound traffic"
+  vpc_id      = "${data.aws_vpc.main.id}"
 
   ingress {
     from_port   = 22
@@ -31,7 +40,7 @@ resource "aws_security_group" "allow_ssh" {
 resource "aws_security_group" "allow_server" {
   name        = "${var.prefix}_allow_server"
   description = "Allow SSH inbound traffic"
-
+  vpc_id      = "${data.aws_vpc.main.id}"
   ingress {
     from_port   = 8080
     to_port     = 8080
@@ -52,6 +61,7 @@ resource "aws_instance" "rudder" {
   instance_type        = "${var.ec2.instance_type}"
   key_name             = "${aws_key_pair.deployer.key_name}"
   iam_instance_profile = "${aws_iam_instance_profile.ec2_profile.id}"
+  subnet_id            = "${data.aws_subnet.main.id}"
 
   tags = {
     Name = "rudder"
