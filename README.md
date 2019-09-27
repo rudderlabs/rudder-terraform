@@ -1,4 +1,4 @@
-### Rudder server infra set-up guide
+## Rudder server infra set-up guide
 
 This document assumes you have Terraform installed on your machine and you can configure the AWS CLI credentials.
 Please refer to the following documents if needed.
@@ -6,21 +6,27 @@ Please refer to the following documents if needed.
 https://docs.aws.amazon.com/en_pv/cli/latest/userguide/cli-chap-install.html,
 https://www.terraform.io/downloads.html
 
-#### Setup your Rudderlabs account
+### Setup your Rudderlabs account
 
 
 1. Go to the [dashboard](https://app.rudderlabs.com) `https://app.rudderlabs.com` and set up your account. Copy your workspace token from top of the home page.
 2. Replace `<your_workspace_token>` in `dataplane.env` with the above token.
 3. Configure a new source and get the source key
 
+### Non-Default VPC
 
-#### AWS setup with Terraform 
+If you are launching the machine in default VPC, please skip this step and move onto next section.
+
+
+If you don't have a default VPC or want to launch rudder in a non-default VPC, checkout the branch `custom-vpc`. Fill in the variables `custom_vpc.vpc_id` and `custom_vpc.subnet_id` in `variables.tf` depending where to want to launch.
+
+### AWS setup with Terraform 
 
 1. Create an AWS user with Administrator access and save your credentials in `~/.aws/credentials`. These credentials are only used by Terraform. We don't need Administrator access but it is easy to setup.
 
 2. The AWS resources that we create is 1 EC2 key pair, 1 EC2 instance, 1 S3 bucket, 2 security groups (to open 22, 8080 ports) 1 IAM role and corresponding policy.
 
-2. Create a SSH keypair. Store in any location (preferably in `id_rsa_tf`, otherwise update new location in `variables.tf`)
+2. Create a SSH keypair. Store in any location (preferably in `~.ssh/id_rsa_tf`, otherwise update new location in `variables.tf`)
 ```
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ```
@@ -48,10 +54,10 @@ http://<instance_ip>:8080/v1/batch
 ```
 
 
-#### Create S3 destination
+### Create S3 destination
 1. Configure a new S3 destination and give the bucket name that you created as part of Terraform setup.
 
-#### Test your setup
+### Test your setup
 
 1. Save your event data in a JSON file, say `event.json`
 
@@ -59,3 +65,5 @@ http://<instance_ip>:8080/v1/batch
 ```
 curl -u <source_key>: -X POST http://<instance_ip>:8080/v1/track -d @event.json --header "Content-Type: application/json"
 ```
+
+
