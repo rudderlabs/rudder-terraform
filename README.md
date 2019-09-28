@@ -11,7 +11,7 @@ https://www.terraform.io/downloads.html
 
 1. Go to the [dashboard](https://app.rudderlabs.com) `https://app.rudderlabs.com` and set up your account. Copy your workspace token from top of the home page.
 2. Replace `<your_workspace_token>` in `dataplane.env` with the above token.
-3. Configure a new source and get the source key
+3. Configure a new source and get the `<source_write_key>`. The source_write_key will be used later in basic auth for sending events.
 
 ### Non-Default VPC
 
@@ -26,7 +26,7 @@ If you don't have a default VPC or want to launch rudder in a non-default VPC, c
 
 2. The AWS resources that we create is 1 EC2 key pair, 1 EC2 instance, 1 S3 bucket, 2 security groups (to open 22, 8080 ports) 1 IAM role and corresponding policy.
 
-2. Create a SSH keypair. Store in any location (preferably in `~.ssh/id_rsa_tf`, otherwise update new location in `variables.tf`)
+2. Create a SSH keypair. Store in any location (preferably in `~.ssh/id_rsa_tf`, otherwise update new location in `variables.tf`). If you want to use your existing keypair, you can skip generating a new one and provide the path to that keypair.
 ```
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ```
@@ -59,11 +59,11 @@ http://<instance_ip>:8080/v1/batch
 
 ### Test your setup
 
-1. Save your event data in a JSON file, say `event.json`
+1. Save your event data in a JSON file, say `event.json` (A sample `event.json` has been included in the repo)
 
 2. Make the following curl request to send an event
 ```
-curl -u <source_key>: -X POST http://<instance_ip>:8080/v1/track -d @event.json --header "Content-Type: application/json"
+curl -u <source_write_key>: -X POST http://<instance_ip>:8080/v1/track -d @event.json --header "Content-Type: application/json"
 ```
 
 
