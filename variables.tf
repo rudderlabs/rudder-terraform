@@ -19,3 +19,7 @@ variable "ec2" {
 variable "s3_destination" {
   default = "rudder-client-s3-destination"
 }
+
+variable "main_route53_zone" {
+  default = "dev.rudderlabs.com"
+}

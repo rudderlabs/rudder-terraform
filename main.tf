@@ -1,6 +1,6 @@
 provider "aws" {
   version = "~> 2.0"
-  profile = "default"
+  profile = "rudder-dev"
   region  = "us-east-1"
 }
 
@@ -127,8 +127,4 @@ resource "aws_instance" "rudder" {
       "sudo systemctl restart rudder"
     ]
   }
-}
-
-output "instance_ip" {
-  value = "${aws_instance.rudder.public_ip}"
 }
